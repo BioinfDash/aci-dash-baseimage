@@ -14,7 +14,7 @@ RUN useradd -ms /bin/bash aci-dash
 RUN npm install npm@latest -g
 RUN npm install plotly.js-dist
 
-RUN pip install dash.ly --upgrade
+RUN pip install --no-cache-dir dash.ly --upgrade
 
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
