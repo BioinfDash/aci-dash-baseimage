@@ -9,7 +9,7 @@ RUN apt -y install npm
 RUN apt -y install git
 RUN apt-get -y install gunicorn
 RUN apt-get -y install python3-pandas
-RUN apt-get -y install python-dotenv
+RUN apt-get -y install python3-dotenv
 
 RUN useradd -ms /bin/bash aci-dash
 RUN npm install npm@latest -g
