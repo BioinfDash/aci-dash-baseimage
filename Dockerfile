@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node:19.6-bullseye-slim 
 
 RUN apt-get -y update
 RUN apt-get -y upgrade
