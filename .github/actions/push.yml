@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  push:
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+env:
+  IMAGE_NAME: aci-dash-baseimage
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Build image
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+
+
+      - name: Push image to github registry
+        run: |
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
+
+          export IMAGE_ID=harbor.computational.bio.uni-giessen.de/scienceobjectsdb/aci-dash-baseimage
+
+          echo "${{ secrets.HARBORPW }}" | docker login harbor.computational.bio.uni-giessen.de -u '${{ secrets.HARBORUSER }}' --password-stdin
+
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
