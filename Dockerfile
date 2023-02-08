@@ -1,18 +1,15 @@
-FROM python:slim-buster
+FROM node:slim
 
 RUN apt-get -y update
 RUN apt-get -y upgrade
-RUN apt-get -y install build-essential
+RUN apt-get -y install build-essential python python3-pip git python3-pandas
 
-RUN apt -y install nodejs
-RUN apt -y install npm
-RUN apt -y install git
-RUN apt-get -y install python3-pandas
+WORKDIR /aci-dash
 
-RUN /usr/local/bin/python -m pip install --upgrade pip
+RUN pip install --upgrade pip
 
 RUN useradd -ms /bin/bash aci-dash
-RUN npm install npm@latest -g
+RUN npm install npm -g
 RUN npm install plotly.js-dist
 
 RUN pip install --no-cache-dir dash.ly --upgrade
